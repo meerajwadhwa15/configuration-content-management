@@ -1,0 +1,77 @@
+{
+  "name": "configuration-content-management",
+  "version": "1.0.0",
+  "description": "Configuration and Content Management",
+  "repository": "https://github.com/meerajwadhwa15/configuration-content-management.git",
+  "author": "Meeraj Wadhwa",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "~6.9.1",
+    "npm": ">=3.10.0"
+  },
+  "scripts": {
+    "start": "node dist/start.js",
+    "dev": "nodemon src/start.js --exec \"node -r dotenv/config -r babel-register\"",
+    "build": "rimraf dist && mkdir -p dist && babel src -s -D -d dist",
+    "test": "jest --watch",
+    "lint": "esw -w src test"
+  },
+  "keywords": [],
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.4.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.7.0",
+    "pug": "^2.0.0-beta11",
+    "rimraf": "^2.6.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^21.0.2",
+    "babel-register": "^6.24.1",
+    "dotenv": "^4.0.0",
+    "eslint": "^4.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jest": "^21.0.2",
+    "eslint-watch": "^3.1.0",
+    "jest": "^21.0.2",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "import"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "env": {
+      "node": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ]
+  }
+}
