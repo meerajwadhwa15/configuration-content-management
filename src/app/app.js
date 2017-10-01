@@ -11,16 +11,20 @@ const App = express();
 App.use(Config.route.API_PATH, bodyParser.json());
 App.use(Config.route.API_PATH, bodyParser.urlencoded({ extended: true }));
 App.use(Config.route.API_PATH, (req, res, next) => {
-    let auth = new Auth(),
-    token = req.headers.token;
+    let auth = new Auth({req, res});
     if (Config.UNAUTH_ROUTES.indexOf(req.url) != -1) {
         next();
     } else {
         // validate JWT Token
-        auth.verifyJWTToken(token).then((res) => {
-            next();
+        let token = req.headers.token;
+        auth.verifyJWTToken(token).then((response) => {
+            if(Config.ADMIN_ROUTES.indexOf(req.url) != -1 && response.data.role !== 'admin') {
+                auth.errorResonse(Config.PERMISSION_DENIED, 400);
+            } else {
+                next();
+            }
         }, (err) => {
-            auth.errorResonse('UnAuthorized Access. Please login again.', 400);
+            auth.errorResonse(Config.UNAUTHORIZED_ACCESS, 400);
         });
     }
 });
@@ -30,7 +34,7 @@ App.use('/static', express.static(__dirname + '/assets'));
 
 // 404 Page
 App.use((req, res) => {
-    //res.send('Not Found');
+    res.send({error: Config.NOT_FOUND}, 404);
 });
 
 export default App;

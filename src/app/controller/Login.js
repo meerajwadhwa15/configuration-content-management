@@ -1,4 +1,6 @@
 import Auth from './Auth';
+import { Config } from '../../config';
+
 export default class Login extends Auth {
     constructor(props) {
         super(props);
@@ -13,10 +15,10 @@ export default class Login extends Auth {
             const token = this.createJWToken(user).then((token)=> {
                 this.response({token, user: user[0]});
             }, () => {
-                this.errorResonse('Server Internal Error', 500);
+                this.errorResonse(Config.INTERNAL_SERVER_ERROR, 500);
             });
         }, (err) => {
-            this.errorResonse('Enter valid username and password.', 404);
+            this.errorResonse(Config.INCORRECT_LOGIN_DETAIL, 404);
         });
     }
 }

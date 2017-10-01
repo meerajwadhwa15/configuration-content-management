@@ -7,10 +7,7 @@ const registerRoutes = Router();
 registerRoutes.post(Config.route.REGISTER, (req, res) => {
     let register = new Register({res, req});
     register.makeDBConnection().then(() => {
-        console.log('Connected to DB Successfully.');
         register.register();
-    }, () => {
-        console.log('DB Connection fail.');
     });
 });
 

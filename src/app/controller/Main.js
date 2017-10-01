@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+import { Config } from '../../config';
 
 export default class Main {
     constructor(props) {
@@ -24,10 +25,10 @@ export default class Main {
         });
     }
 
-    updateRecord(collection, options) {
+    updateRecord(collection, query, data) {
         return new Promise((resolve, reject) => {
-            this.db.collection(collection).find(options).toArray((err, result) => {
-                if(err || !result || !result.length) reject(err);
+            this.db.collection(collection).update(query, data, (err, result) => {
+                if(err) reject(err);
                 resolve(result);
             });
         });
@@ -35,8 +36,8 @@ export default class Main {
 
     deleteRecord(collection, options) {
         return new Promise((resolve, reject) => {
-            this.db.collection(collection).find(options).toArray((err, result) => {
-                if(err || !result || !result.length) reject(err);
+            this.db.collection(collection).remove(options, (err, result) => {
+                if(err) reject(err);
                 resolve(result);
             });
         });
@@ -46,14 +47,14 @@ export default class Main {
         return new Promise((resolve, reject) => {
             this.db.collection(collection).find(options).toArray((err, result) => {
                 if(err || !result || !result.length) reject(err);
-                resolve(result[0]);
+                resolve(result);
             });
         });
     }
 
     makeDBConnection() {
         return new Promise((resolve, reject) => {
-            MongoClient.connect('mongodb://localhost:27017/configure-content-management', (err, db) => {
+            MongoClient.connect(`mongodb://${Config.database.HOST}:${Config.database.PORT}/${Config.database.DATABASE}`, (err, db) => {
                 if (err) reject(err);
                 this.db = db;
                 resolve('success');

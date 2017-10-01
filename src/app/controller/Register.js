@@ -1,4 +1,6 @@
 import Main from './Main';
+import { Config } from '../../config';
+
 export default class Login extends Main {
     constructor(props) {
         super(props);
@@ -11,7 +13,7 @@ export default class Login extends Main {
                 { email: this.props.req.body.email }
             ]
         }).then((users) => {
-            this.errorResonse('Username and email is already used.', 404);
+            this.errorResonse(Config.USERNAME_ALREADY_CHOOSEN, 404);
         }, () => {
             this.insertRecord('users', {
                 username: this.props.req.body.username,
