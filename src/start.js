@@ -1,7 +1,7 @@
-import App from './app';
+import App from './app/app';
 import {Config} from './config';
 
-const { PORT = Config.defaultPort } = process.env;
+const { PORT = Config.DEFAULT_PORT } = process.env;
 App.listen(PORT, function () {
     console.log(`App listening on port ${PORT} !`);
 });

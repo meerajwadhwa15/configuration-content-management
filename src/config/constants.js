@@ -1,3 +1,6 @@
 export const Constants = {
-    defaultPort: 3000
+    DEFAULT_PORT: 3000,
+    JWT_SECRET: 'sdsad',
+    JWL_ALGORITHAM: 'HS256',
+    JWL_DEFAULT_AGE: 3600
 };
