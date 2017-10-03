@@ -8,22 +8,20 @@ export default class Configurations extends Main {
     }
 
     create() {
-        this.getRecord(this.collectionName, {
-            name: this.props.req.body.name
-        }).then((users) => {
-            this.errorResonse(`Configuration already defined for ${this.props.req.body.name}`, 400);
-        }, () => {
-            this.insertRecord(this.collectionName, {
-                name: this.props.req.body.name,
-                configuration: this.props.req.body.configuration,
-                userId: this.props.req.body.userId,
-                approve: false,
-                publish: false
-            }).then((configuration) => {
-                this.response({ configuration });
-            }, (err) => {
-                this.errorResonse(err, 404);
-            });
+        this.insertRecord(this.collectionName, {
+            name: this.props.req.body.name,
+            configuration: JSON.stringify(this.props.req.body.configuration),
+            userId: this.props.req.body.userId,
+            approve: false,
+            publish: false,
+            approveBy: '',
+            publishBy: '',
+            created: new Date(),
+            updated: new Date()
+        }).then((configuration) => {
+            this.response({ configuration });
+        }, (err) => {
+            this.errorResonse(err, 404);
         });
     }
 
@@ -31,11 +29,9 @@ export default class Configurations extends Main {
         this.updateRecord(this.collectionName, { _id: ObjectID(this.props.req.body.id) }, {
             $set: {
                 name: this.props.req.body.name,
-                configuration: this.props.req.body.configuration,
-                approve: false,
-                publish: false
-            },
-            $currentDate: { lastModified: true }
+                configuration: JSON.stringify(this.props.req.body.configuration),
+                updated: new Date()
+            }
         }).then((configuration) => {
             this.response({ configuration });
         }, (err) => {
@@ -44,7 +40,7 @@ export default class Configurations extends Main {
     }
 
     delete() {
-        this.deleteRecord(this.collectionName, { _id: ObjectID(this.props.req.body.id) }).then(() => {
+        this.deleteRecord(this.collectionName, { _id: ObjectID(this.props.req.query.id) }).then(() => {
             this.response({ success: true });
         }, (err) => {
             this.errorResonse(err, 400);
@@ -52,16 +48,16 @@ export default class Configurations extends Main {
     }
 
     allConfigurations() {
-        this.getRecord(this.collectionName).then((configuration) => {
-            this.response({ configuration });
+        this.getRecord(this.collectionName).then((configurations) => {
+            this.response({ configurations });
         }, (err) => {
             this.errorResonse(err, 400);
         });
     }
 
     get() {
-        this.getRecord(this.collectionName, { userId: this.props.req.body.userId }).then((configurations) => {
-            this.response({ configuration });
+        this.getRecord(this.collectionName, { userId: this.props.req.query.userId }).then((configurations) => {
+            this.response({ configurations });
         }, (err) => {
             this.errorResonse(err, 400);
         });
@@ -70,7 +66,8 @@ export default class Configurations extends Main {
     approve() {
         this.updateRecord(this.collectionName, { _id: ObjectID(this.props.req.body.id) }, {
             $set: {
-                approve: true
+                approve: true,
+                approveBy: this.props.req.body.approveBy
             },
             $currentDate: { lastModified: true }
         }).then((configuration) => {
@@ -83,7 +80,8 @@ export default class Configurations extends Main {
     publish() {
         this.updateRecord(this.collectionName, { _id: ObjectID(this.props.req.body.id) }, {
             $set: {
-                publish: true
+                publish: true,
+                publishBy: this.props.req.body.publishBy
             },
             $currentDate: { lastModified: true }
         }).then((configuration) => {

@@ -62,11 +62,19 @@ export default class Main {
         });
     }
 
+    closeDBConnection() {
+        if(this.db) {
+            this.db.close();
+        }
+    }
+
     response(response) {
+        this.closeDBConnection();
         this.props.res.send(response);
     }
 
     errorResonse(response, statusCode = 400) {
+        this.closeDBConnection();
         this.props.res.send({error: response});
     }
 };

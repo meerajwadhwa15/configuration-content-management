@@ -7,6 +7,7 @@ const configurationsRoutes = Router();
 configurationsRoutes.post(Config.route.CONFIGURATION, (req, res) => {
     let configurations = new Configurations({res, req});
     configurations.makeDBConnection().then(() => {
+        console.log('connection successfull');
         configurations.create();
     });
 });

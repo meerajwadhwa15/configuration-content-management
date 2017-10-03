@@ -11,14 +11,17 @@ const App = express();
 App.use(Config.route.API_PATH, bodyParser.json());
 App.use(Config.route.API_PATH, bodyParser.urlencoded({ extended: true }));
 App.use(Config.route.API_PATH, (req, res, next) => {
-    let auth = new Auth({req, res});
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, token, body, Content-Type");
+    let auth = new Auth({ req, res });
     if (Config.UNAUTH_ROUTES.indexOf(req.url) != -1) {
         next();
     } else {
         // validate JWT Token
         let token = req.headers.token;
         auth.verifyJWTToken(token).then((response) => {
-            if(Config.ADMIN_ROUTES.indexOf(req.url) != -1 && response.data.role !== 'admin') {
+            if (Config.ADMIN_ROUTES.indexOf(req.url) != -1 && response.data && response.data.length && response.data[0].role.toLowerCase() !== 'admin') {
                 auth.errorResonse(Config.PERMISSION_DENIED, 400);
             } else {
                 next();
@@ -34,7 +37,7 @@ App.use('/static', express.static(__dirname + '/assets'));
 
 // 404 Page
 App.use((req, res) => {
-    res.send({error: Config.NOT_FOUND}, 404);
+    res.send({ error: Config.NOT_FOUND });
 });
 
 export default App;

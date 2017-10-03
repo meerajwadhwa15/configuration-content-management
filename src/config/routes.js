@@ -3,7 +3,7 @@ const Routes = {
         API_PATH: '/api',
         DEFAULT: '/',
         LOGIN: '/login',
-        REGISTER: '/register',
+        REGISTER: '/user',
         LOGOUT: '/logout',
         DASHBOARD: '/dashboard',
         NOT_FOUND: '/not-found',
